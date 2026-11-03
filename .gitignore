@@ -17,3 +17,6 @@ __pycache__/
 *.jpeg
 *.png
 .DS_Store
+.vercel/
+**/.vercel/
+
