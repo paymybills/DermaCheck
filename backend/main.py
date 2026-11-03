@@ -38,6 +38,12 @@ def get_genai_client() -> genai.Client:
 
 # --- Pydantic Data Contracts ---
 
+DEMO_DISCLAIMER_WATERMARK = (
+    "⚠️ DEMO PRE-SCREENING AID ONLY — NOT A DOCTOR. "
+    "This automated tool does NOT provide medical advice, diagnosis, or prescriptions. "
+    "Always consult a board-certified dermatologist or medical doctor for formal clinical evaluation."
+)
+
 
 class AlertNotice(BaseModel):
     level: Literal["emergency", "urgent", "soon"]
@@ -54,6 +60,10 @@ class ConditionMatch(BaseModel):
     matched: List[str]
     usually_also: List[str]
     blurb: str
+    evidence: Optional[str] = Field(
+        default=None,
+        description="Clinical, morphological, and visual evidence supporting this condition match.",
+    )
     self_care: List[str]
     see_doctor_if: str
 
@@ -71,15 +81,25 @@ class TriageScreeningResponse(BaseModel):
     alert: Optional[AlertNotice] = None
     mole_warning: bool = False
     lead: str
+    clinical_analysis: Optional[str] = Field(
+        default=None,
+        description="Detailed clinical screening analysis detailing symptom morphology, differential diagnosis reasoning, and supporting evidence.",
+    )
     conditions: List[ConditionMatch] = Field(default_factory=list)
 
 
 class TriageFullResponse(BaseModel):
+    watermark: str = Field(
+        default=DEMO_DISCLAIMER_WATERMARK,
+        description="Mandatory disclaimer banner: not a doctor, consult a physician.",
+    )
     alert: Optional[AlertNotice] = None
     mole_warning: bool
     lead: str
+    clinical_analysis: Optional[str] = None
     conditions: List[ConditionMatch]
     recommended_doctors: List[DoctorListing]
+
 
 
 # Reliable Mumbai clinic fallbacks if search grounding fails or is throttled
@@ -111,17 +131,15 @@ FALLBACK_DOCTORS: List[DoctorListing] = [
 ]
 
 SYSTEM_INSTRUCTION = (
-    "You are an AI dermatology screening assistant. "
-    "This tool is a pre-screening aid only, NEVER a definitive medical diagnosis. "
-    "Always exercise high clinical caution:\n"
-    "1. Set 'alert' with level 'emergency' or 'urgent' if there are red flags such as signs of anaphylaxis, "
-    "breathing distress, facial/lip/throat swelling, rapid spreading hot erythema, blister sloughing, or mucosal detachment. "
-    "Use level 'soon' for persistent or bothersome symptoms needing standard evaluation.\n"
-    "2. Set 'mole_warning' to true if any dark pigmented lesion shows ABCDE signs of melanoma "
-    "(Asymmetry, Border irregularity, Color variation, Diameter >6mm, or Evolving characteristics).\n"
-    "3. Provide matched conditions with fit level ('strong', 'possible', 'weak'), symptoms matched, "
-    "symptoms usually also present, a concise clinical blurb, evidence-backed self-care steps, and specific 'see_doctor_if' thresholds.\n"
-    "4. Provide a warm, clear, informative summary 'lead' sentence for the patient."
+    "You are an AI dermatology screening assistant for DEMONSTRATION PURPOSES ONLY. "
+    "MANDATORY CLINICAL SAFETY DIRECTIVE: You are NOT a doctor and CANNOT give definitive medical diagnoses. "
+    "Every evaluation must make it unequivocally clear that the user must visit a qualified medical doctor or board-certified dermatologist.\n"
+    "Clinical Rules:\n"
+    "1. Clinical Analysis & Evidence: Provide a thorough 'clinical_analysis' evaluating lesion morphology (e.g., erythema, papules/plaques, wheals, scaling, borders, anatomical distribution) and chronicity, presenting concrete clinical evidence and differential reasoning.\n"
+    "2. Suggest Matching Conditions: Provide 1 to 4 candidate conditions ('strong', 'possible', 'weak'). For every condition, specify concrete 'evidence' from the patient's reported symptoms and visual presentation, matched symptoms, associated signs, concise blurb, conservative non-prescription self-care, and explicit 'see_doctor_if' red-line thresholds.\n"
+    "3. Acute Red-Flag Alerts: Set 'alert' with level 'emergency' or 'urgent' if there are signs of anaphylaxis, airway or breathing compromise, facial/lip/tongue angioedema, rapidly spreading hot erythema, blister sloughing, or mucosal detachment. Use 'soon' for persistent or worsening symptoms needing prompt outpatient evaluation.\n"
+    "4. Melanoma Detection: Set 'mole_warning' to true if any dark or pigmented lesion exhibits ABCDE criteria (Asymmetry, Border irregularity, Color variegation, Diameter >6mm, Evolving/changing).\n"
+    "5. Summary Lead: Formulate a clear, reassuring, patient-accessible summary lead sentence that stresses clinical consultation."
 )
 
 # Initialize FastAPI App
@@ -227,9 +245,12 @@ async def triage_poc(
         f"- Affected Body Area: {body_area}\n"
         f"- Location / City: {city}\n"
         f"- Duration of Symptoms: {duration}\n\n"
-        "Evaluate the skin features (and attached image if available). "
-        "Identify potential matching conditions, assess acute warning signs, check for melanoma ABCDE signs, "
-        "and formulate a safe, helpful screening response."
+        "Instructions:\n"
+        "1. Analyze the skin presentation, lesion characteristics (if photo attached), and symptom chronology.\n"
+        "2. Formulate a detailed 'clinical_analysis' explaining what the clinical evidence suggests, key differential considerations, and why.\n"
+        "3. Suggest matching differential conditions with specific supporting 'evidence' for each match.\n"
+        "4. Check for emergency red flags (set alert notice) or melanoma ABCDE signs (set mole_warning=true).\n"
+        "5. Emphasize that this is an algorithmic pre-screening demonstration and they must consult a qualified medical doctor."
     )
     contents.append(user_prompt)
 
@@ -315,9 +336,11 @@ async def triage_poc(
 
     # --- Part C: Combine ---
     return TriageFullResponse(
+        watermark=DEMO_DISCLAIMER_WATERMARK,
         alert=screening.alert,
         mole_warning=screening.mole_warning,
         lead=screening.lead,
+        clinical_analysis=screening.clinical_analysis,
         conditions=screening.conditions,
         recommended_doctors=recommended_doctors,
     )

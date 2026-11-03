@@ -42,8 +42,13 @@ echo "==> Activating virtual environment..."
 source "$VENV_DIR/bin/activate"
 
 # Install/update dependencies
-echo "==> Installing requirements from requirements.txt..."
-pip install -r requirements.txt
+if command -v uv &> /dev/null; then
+  echo "==> Installing / updating dependencies using uv (fast)..."
+  uv pip install -r requirements.txt --python "$VENV_DIR"
+else
+  echo "==> Installing requirements from requirements.txt..."
+  pip install -r requirements.txt
+fi
 
 # Start FastAPI server
 echo "==> Starting DermaCheck backend on http://0.0.0.0:8000 ..."
