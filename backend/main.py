@@ -6,7 +6,6 @@ from typing import List, Literal, Optional
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 from pydantic import BaseModel, Field
 
@@ -149,14 +148,8 @@ app = FastAPI(
     description="Multimodal skin screening and doctor referral demo backend powered by Gemini 2.5 Flash",
 )
 
-# Wide-open CORS configuration for frontend callers (Vercel, localhost, ngrok, Cloudflare)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# The frontend and API share an origin in production; Vite proxies API calls locally.
+# No cross-origin browser access is needed.
 
 
 @app.get("/health")
@@ -222,6 +215,20 @@ async def triage_poc(
     - city: Target city for doctor referral (default: Mumbai)
     - duration: Symptom duration (e.g. short, days, months)
     """
+    if len(features) > 2000 or len(body_area) > 80 or len(city) > 80:
+        raise HTTPException(status_code=422, detail="Input text is too long.")
+    if duration not in {"short", "mid", "chronic"}:
+        raise HTTPException(status_code=422, detail="Invalid duration.")
+
+    # Leave room for multipart overhead under Vercel's 4.5 MB function limit.
+    max_photo_bytes = 4 * 1024 * 1024
+    if photo is not None and photo.filename:
+        if photo.content_type not in {"image/jpeg", "image/png", "image/webp"}:
+            raise HTTPException(status_code=415, detail="Use a JPEG, PNG, or WebP photo.")
+        if len(await photo.read(max_photo_bytes + 1)) > max_photo_bytes:
+            raise HTTPException(status_code=413, detail="Photo must be smaller than 4 MB.")
+        await photo.seek(0)
+
     ai_client = get_genai_client()
 
     # --- Part A: Multimodal Triage ---
@@ -230,14 +237,18 @@ async def triage_poc(
     # Process image if provided
     if photo is not None and photo.filename:
         try:
-            raw_bytes = await photo.read()
+            raw_bytes = await photo.read(max_photo_bytes + 1)
             if raw_bytes:
                 image = Image.open(io.BytesIO(raw_bytes))
+                if image.width * image.height > 20_000_000:
+                    raise ValueError("Image dimensions are too large")
+                image.load()
                 if image.mode not in ("RGB", "L"):
                     image = image.convert("RGB")
                 contents.append(image)
         except Exception as img_err:
-            logger.warning("Failed to parse uploaded photo as image: %s", img_err)
+            logger.warning("Failed to parse uploaded photo: %s", type(img_err).__name__)
+            raise HTTPException(status_code=415, detail="Photo could not be read. Use a valid JPEG, PNG, or WebP image.")
 
     user_prompt = (
         f"Patient Skin Screening Assessment Request:\n"
@@ -280,11 +291,17 @@ async def triage_poc(
                 screening_response.text
             )
     except Exception as triage_err:
-        logger.error("Multimodal triage failed: %s", triage_err, exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail=f"Screening analysis failed: {str(triage_err)}",
+        logger.error(
+            "Multimodal triage failed: type=%s code=%s",
+            type(triage_err).__name__,
+            getattr(triage_err, "code", None),
         )
+        if getattr(triage_err, "code", None) == 429:
+            raise HTTPException(
+                status_code=429,
+                detail="AI service limit reached. Please try again after the quota resets.",
+            )
+        raise HTTPException(status_code=503, detail="Screening service unavailable. Please try again.")
 
     # --- Part B: Live Doctor Search Grounding ---
     # Top condition from Part A (default to "general dermatology" if none)
@@ -324,7 +341,7 @@ async def triage_poc(
         if grounding_response.text:
             recommended_doctors = parse_doctor_listings(grounding_response.text)
 
-        if not recommended_doctors:
+        if not recommended_doctors and city.strip().casefold() == "mumbai":
             logger.warning("Empty doctor list returned from grounding, using fallback.")
             recommended_doctors = FALLBACK_DOCTORS
     except Exception as ground_err:
@@ -332,7 +349,7 @@ async def triage_poc(
             "Live doctor search grounding failed: %s. Using hardcoded Mumbai fallback list.",
             ground_err,
         )
-        recommended_doctors = FALLBACK_DOCTORS
+        recommended_doctors = FALLBACK_DOCTORS if city.strip().casefold() == "mumbai" else []
 
     # --- Part C: Combine ---
     return TriageFullResponse(
