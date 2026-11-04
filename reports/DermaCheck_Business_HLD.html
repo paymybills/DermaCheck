@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DermaCheck — Business Partner HLD</title>
+  <style>
+    @page { size: A4 landscape; margin: 0; }
+    * { box-sizing: border-box; }
+    :root { --ink:#172b35; --muted:#526775; --teal:#1e6f72; --line:#d6e2df; --pale:#edf5f2; --warm:#faf1eb; --accent:#c98768; }
+    body { margin:0; background:#e7eceb; color:var(--ink); font-family:Arial,Helvetica,sans-serif; }
+    .page { position:relative; width:297mm; height:210mm; margin:10mm auto; padding:14mm 16mm 12mm; background:#fff; box-shadow:0 8px 36px #1b34301a; overflow:hidden; }
+    .brand { display:flex; align-items:center; gap:2.5mm; color:var(--teal); font-size:9pt; font-weight:700; letter-spacing:.1em; }
+    .mark { width:7mm; height:7mm; display:grid; place-items:center; color:#fff; background:var(--teal); border-radius:2mm; font-family:Georgia,serif; font-size:13pt; letter-spacing:0; }
+    h1 { margin:6mm 0 1.5mm; font-family:Georgia,'Times New Roman',serif; font-size:27pt; letter-spacing:-.025em; }
+    .subtitle { margin:0; color:var(--muted); font-size:11.5pt; }
+    .ribbon { position:absolute; right:16mm; top:15mm; padding:2mm 3mm; border-radius:100px; background:var(--warm); color:#955b42; font-size:8pt; font-weight:700; }
+    h2 { margin:0 0 3mm; color:var(--teal); font-size:10pt; text-transform:uppercase; letter-spacing:.09em; }
+    h3 { margin:0 0 2mm; font-size:10pt; }
+    p { margin:0; font-size:9pt; line-height:1.42; }
+    .one-line { margin:7mm 0 5mm; padding:4mm 5mm; background:var(--pale); border-left:3px solid var(--teal); border-radius:1.5mm; font-size:10pt; }
+    .flow { display:grid; grid-template-columns:1fr 5mm 1fr 5mm 1fr 5mm 1fr 5mm 1fr; align-items:stretch; gap:1.8mm; }
+    .step { min-height:44mm; padding:3.5mm; border:1px solid var(--line); border-radius:3mm; background:#fff; }
+    .step:nth-of-type(4n+1) { background:#f6faf8; }
+    .number { display:block; margin-bottom:2mm; color:var(--accent); font-size:8pt; font-weight:700; letter-spacing:.06em; }
+    .arrow { display:grid; place-items:center; color:var(--accent); font-size:21pt; font-family:Georgia,serif; }
+    .lower { display:grid; grid-template-columns:1.08fr 1fr 1fr; gap:4mm; margin-top:5mm; }
+    .panel { min-height:48mm; padding:4mm; border:1px solid var(--line); border-radius:3mm; background:#fff; }
+    .panel.warm { background:var(--warm); border-color:#edddcf; }
+    .panel p + p { margin-top:2mm; }
+    .bullets { margin:0; padding-left:4mm; }
+    .bullets li { margin-bottom:1.5mm; font-size:8.5pt; line-height:1.35; }
+    .foot { position:absolute; left:16mm; right:16mm; bottom:8mm; display:flex; justify-content:space-between; border-top:1px solid var(--line); padding-top:2mm; color:#71838c; font-size:7.4pt; }
+    strong { color:#183943; }
+    @media print { body{background:#fff} .page{margin:0;box-shadow:none} }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="brand"><span class="mark">D</span> DERMACHECK</div>
+    <div class="ribbon">ONE-PAGE HIGH-LEVEL DESIGN · 4 NOV 2026</div>
+    <h1>How DermaCheck works</h1>
+    <p class="subtitle">A plain-language system map for business partners</p>
+
+    <p class="one-line"><strong>Think of it as a digital front desk for skin concerns.</strong> It gathers the right details, helps a person understand what may need attention, and points them toward care. A clinician still makes the medical decision.</p>
+
+    <h2>The journey today</h2>
+    <div class="flow">
+      <div class="step"><span class="number">01 · PERSON</span><h3>Describes the concern</h3><p>Enters symptoms, body area, duration and city. A skin photo is optional.</p></div>
+      <div class="arrow">›</div>
+      <div class="step"><span class="number">02 · WEBSITE</span><h3>Collects the details</h3><p>The mobile-friendly page checks the form and sends it to the server.</p></div>
+      <div class="arrow">›</div>
+      <div class="step"><span class="number">03 · SERVER</span><h3>Coordinates the request</h3><p>Checks file and text limits, then asks an external AI service to review the information.</p></div>
+      <div class="arrow">›</div>
+      <div class="step"><span class="number">04 · AI + SEARCH</span><h3>Returns two kinds of help</h3><p>Possible explanations and warning flags; search-backed local clinic suggestions.</p></div>
+      <div class="arrow">›</div>
+      <div class="step"><span class="number">05 · PERSON</span><h3>Chooses the next step</h3><p>Reads the screening summary and contacts a qualified clinician if needed.</p></div>
+    </div>
+
+    <div class="lower">
+      <section class="panel">
+        <h2>Who runs which part?</h2>
+        <p><strong>Vercel</strong> hosts the website and API. <strong>Google's Gemini API</strong> processes the screening request; Google Search grounding supports care suggestions. <strong>A dermatologist</strong> would provide diagnosis and treatment in a separate consultation.</p>
+      </section>
+      <section class="panel">
+        <h2>What is live—and what is not?</h2>
+        <p>Live: guided intake, optional photo, AI-assisted summary, alerts and clinic suggestions. There is <strong>no doctor review, appointment booking, verified provider directory or patient-record system</strong> in the current prototype.</p>
+      </section>
+      <section class="panel warm">
+        <h2>Before a real service launch</h2>
+        <ul class="bullets">
+          <li>Have clinicians validate safety and review high-risk cases.</li>
+          <li>Verify clinic listings and add a clear consent/privacy flow.</li>
+          <li>Add rate limits, monitoring and a plan for API outages.</li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="foot"><span>Educational prototype · screening aid only, not a diagnosis or teleconsultation</span><span>Business partner overview · 1 / 1</span></div>
+  </main>
+</body>
+</html>
