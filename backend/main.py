@@ -6,6 +6,7 @@ from typing import List, Literal, Optional
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 from pydantic import BaseModel, Field
 
@@ -148,8 +149,14 @@ app = FastAPI(
     description="Multimodal skin screening and doctor referral demo backend powered by Gemini 2.5 Flash",
 )
 
-# The frontend and API share an origin in production; Vite proxies API calls locally.
-# No cross-origin browser access is needed.
+# Enable wide-open CORS so tunnel, ngrok, preview, and external callers can interact without preflight issues
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/health")
