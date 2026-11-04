@@ -863,6 +863,9 @@ export default function TriageDashboard() {
           </div>
         </main>
       </div>
+      <footer className="site-footer">
+        <p>© 2026 Rhea Ferrao <span aria-hidden="true">·</span> Biomedical Engineering, MIT Manipal</p>
+      </footer>
     </div>
   );
 }
