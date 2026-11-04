@@ -7,6 +7,8 @@ import {
   Copy,
   ExternalLink,
   LoaderCircle,
+  ChevronDown,
+  MapPin,
   Phone,
   Upload,
   X,
@@ -45,14 +47,14 @@ type Result = {
 const symptoms = [
   "Itching",
   "Redness",
+  "Pain / tenderness",
+  "Rapid spread",
+  "Blistering",
+  "Dark irregular pigment",
   "Raised bumps / wheals",
   "Flaking / peeling",
   "Burning sensation",
-  "Blistering",
   "Dry scaly patches",
-  "Rapid spread",
-  "Pain / tenderness",
-  "Dark irregular pigment",
 ];
 const areas = [
   "Face",
@@ -87,6 +89,7 @@ export default function TriageDashboard() {
   const [duration, setDuration] = useState("short"),
     [city, setCity] = useState("Mumbai"),
     [submittedCity, setSubmittedCity] = useState("Mumbai");
+  const [showAllSymptoms, setShowAllSymptoms] = useState(false);
   const [loading, setLoading] = useState(false),
     [error, setError] = useState(""),
     [results, setResults] = useState<Result | null>(null),
@@ -255,74 +258,35 @@ export default function TriageDashboard() {
         </a>
       </header>
       <div className="app-layout" id="top">
+        <aside className="workspace-sidebar" aria-label="Page sections">
+          <div className="workspace-sidebar-inner">
+            <p className="sidebar-caption">On this page</p>
+            <nav>
+              <a href="#area-section">Affected area</a>
+              <a href="#symptom-section">Symptoms</a>
+              <a href="#context-section">Duration & city</a>
+              <a href="#photo-section">Photo</a>
+              {results && <a href="#results-title">Your summary</a>}
+            </nav>
+            <p className="sidebar-note">A starting point for your conversation with a clinician.</p>
+          </div>
+        </aside>
         <main className="sheet">
           <div className="content">
             <section className="intro" aria-labelledby="page-title">
-              <div>
-                <h1 id="page-title">A clearer next step for your skin.</h1>
+              <div className="intro-copy">
+                <h1 id="page-title">Describe your skin concern.</h1>
                 <p>
-                  Tell us what you notice. We’ll organize your concern and help
-                  you find a clinician to speak with.
+                  Share what you’ve noticed. We’ll organize possible considerations
+                  and help you find a clinician nearby.
                 </p>
               </div>
             </section>
             <form onSubmit={submit} className="intake-form">
-              <section className="form-section">
-                <div className="section-heading">
-                  <h2>Photo</h2>
-                  <span>Optional</span>
-                </div>
-                <p className="field-help">
-                  A well-lit photo can help describe visible features. Avoid
-                  including identifying details.
-                </p>
-                <input
-                  ref={inputRef}
-                  id="skin-photo"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  onChange={onFile}
-                  className="visually-hidden"
-                />
-                {preview ? (
-                  <div className="photo-preview">
-                    <img src={preview} alt="Selected skin photo preview" />
-                    <div>
-                      <strong>{photo?.name}</strong>
-                      <span>
-                        {photo
-                          ? `${(photo.size / 1024 / 1024).toFixed(1)} MB`
-                          : ""}
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={removePhoto}
-                      className="icon-button"
-                      aria-label="Remove photo"
-                    >
-                      <X size={18} />
-                    </button>
-                  </div>
-                ) : (
-                  <div
-                    className="upload-zone"
-                    onDrop={onDrop}
-                    onDragOver={(event) => event.preventDefault()}
-                  >
-                    <Upload size={22} aria-hidden="true" />
-                    <div>
-                      <label htmlFor="skin-photo">Choose a photo</label>
-                      <span> or drop it here</span>
-                      <small>JPEG, PNG or WebP · up to 4 MB</small>
-                    </div>
-                  </div>
-                )}
-              </section>
-              <section className="form-section">
+              <section className="form-section area-section" id="area-section">
                 <div className="section-heading">
                   <h2>Affected area</h2>
-                  <span>Choose one</span>
+                  <span>Choose one area</span>
                 </div>
                 <div
                   className="choice-grid"
@@ -342,13 +306,13 @@ export default function TriageDashboard() {
                   ))}
                 </div>
               </section>
-              <section className="form-section">
+              <section className="form-section symptom-section" id="symptom-section">
                 <div className="section-heading">
                   <h2>What do you notice?</h2>
-                  <span>Select any</span>
+                  <span>Select all that apply</span>
                 </div>
                 <div className="choice-grid" role="group" aria-label="Symptoms">
-                  {symptoms.map((item) => (
+                  {(showAllSymptoms ? symptoms : symptoms.slice(0, 6)).map((item) => (
                     <button
                       type="button"
                       key={item}
@@ -360,52 +324,73 @@ export default function TriageDashboard() {
                     </button>
                   ))}
                 </div>
+                <button
+                  className="more-choice-button"
+                  type="button"
+                  aria-expanded={showAllSymptoms}
+                  onClick={() => setShowAllSymptoms((value) => !value)}
+                >
+                  {showAllSymptoms ? "Show fewer" : "More symptoms"}
+                  {!showAllSymptoms && selected.filter((item) => symptoms.slice(6).includes(item)).length > 0 &&
+                    <span>{selected.filter((item) => symptoms.slice(6).includes(item)).length} selected</span>}
+                  <ChevronDown size={15} aria-hidden="true" />
+                </button>
                 <label className="field-label" htmlFor="details">
-                  Anything else?
+                  Additional details
                 </label>
                 <textarea
                   id="details"
                   rows={3}
                   value={details}
                   onChange={(event) => setDetails(event.target.value)}
-                  placeholder="For example, when it started or what makes it worse"
+                  maxLength={1500}
+                  placeholder="How it started, what it feels like, or what has changed"
                 />
               </section>
-              <section className="form-section compact-fields">
-                <div>
-                  <label className="field-label" htmlFor="duration">
-                    How long has it been there?
-                  </label>
-                  <select
-                    id="duration"
-                    value={duration}
-                    onChange={(event) => setDuration(event.target.value)}
-                  >
-                    {durations.map((item) => (
-                      <option key={item.value} value={item.value}>
-                        {item.label}
-                      </option>
-                    ))}
-                  </select>
+              <section className="form-section context-section" id="context-section">
+                <div className="section-heading">
+                  <h2>Context</h2>
+                  <span>Timing and location</span>
                 </div>
-                <div>
-                  <label className="field-label" htmlFor="city">
-                    City for specialist suggestions
-                  </label>
-                  <input
-                    id="city"
-                    value={city}
-                    onChange={(event) => setCity(event.target.value)}
-                    maxLength={80}
-                    required
-                  />
+                <div className="compact-fields">
+                  <div>
+                    <label className="field-label" htmlFor="duration">How long?</label>
+                    <select id="duration" value={duration} onChange={(event) => setDuration(event.target.value)}>
+                      {durations.map((item) => (
+                        <option key={item.value} value={item.value}>{item.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="field-label" htmlFor="city">Your city <MapPin size={14} aria-hidden="true" /></label>
+                    <input id="city" value={city} onChange={(event) => setCity(event.target.value)} maxLength={80} required />
+                  </div>
                 </div>
               </section>
+              <details className="photo-disclosure" id="photo-section">
+                <summary>
+                  <span className="photo-disclosure-icon"><Upload size={17} aria-hidden="true" /></span>
+                  <span><strong>{photo ? "Photo attached" : "Add a photo"}</strong><small>{photo ? photo.name : "Optional · up to 4 MB"}</small></span>
+                  <ChevronDown size={17} className="disclosure-chevron" aria-hidden="true" />
+                </summary>
+                <div className="photo-disclosure-body">
+                  <p className="field-help">Use a well-lit image without identifying details. JPEG, PNG or WebP, up to 4 MB.</p>
+                  <input ref={inputRef} id="skin-photo" type="file" accept="image/jpeg,image/png,image/webp" onChange={onFile} className="visually-hidden" />
+                  {preview ? (
+                    <div className="photo-preview">
+                      <img src={preview} alt="Selected skin photo preview" />
+                      <div><strong>{photo?.name}</strong><span>{photo ? `${(photo.size / 1024 / 1024).toFixed(1)} MB` : ""}</span></div>
+                      <button type="button" onClick={removePhoto} className="icon-button" aria-label="Remove photo"><X size={18} /></button>
+                    </div>
+                  ) : (
+                    <div className="upload-zone" onDrop={onDrop} onDragOver={(event) => event.preventDefault()}>
+                      <Upload size={20} aria-hidden="true" />
+                      <div><label htmlFor="skin-photo">Choose a photo</label><span> or drop it here</span></div>
+                    </div>
+                  )}
+                </div>
+              </details>
               <div className="form-footer">
-                <p>
-                  Screening only. If symptoms are severe or rapidly worsening,
-                  seek medical care now.
-                </p>
                 <button
                   className="primary-button"
                   type="submit"
@@ -421,6 +406,7 @@ export default function TriageDashboard() {
                     </>
                   )}
                 </button>
+                <p>For severe or rapidly worsening symptoms, seek medical care now.</p>
               </div>
               {loading && <LoadingJourney />}
               {error && (
@@ -494,10 +480,10 @@ export default function TriageDashboard() {
                   <h3>Screening overview</h3>
                   <p>{results.lead}</p>
                   {results.clinical_analysis && (
-                    <div className="clinical-analysis">
-                      <strong>Clinical analysis</strong>
+                    <details className="clinical-analysis">
+                      <summary>Read the clinical reasoning <ChevronDown size={16} aria-hidden="true" /></summary>
                       <p>{results.clinical_analysis}</p>
-                    </div>
+                    </details>
                   )}
                 </div>
                 <div className="result-block result-animate">
@@ -513,34 +499,16 @@ export default function TriageDashboard() {
                             </span>
                           </div>
                           <p>{item.blurb}</p>
-                          {item.evidence && (
-                            <p>
-                              <strong>Supporting evidence:</strong>{" "}
-                              {item.evidence}
-                            </p>
+                          <p className="doctor-threshold"><strong>See a doctor if:</strong> {item.see_doctor_if}</p>
+                          {(item.evidence || item.matched.length > 0 || item.usually_also.length > 0 || item.self_care.length > 0) && (
+                            <details className="condition-detail">
+                              <summary>More detail <ChevronDown size={15} aria-hidden="true" /></summary>
+                              {item.evidence && <p><strong>Supporting evidence:</strong> {item.evidence}</p>}
+                              {item.matched.length > 0 && <p><strong>Features matched:</strong> {item.matched.join(" · ")}</p>}
+                              {item.usually_also.length > 0 && <p><strong>Often also seen:</strong> {item.usually_also.join(" · ")}</p>}
+                              {item.self_care.length > 0 && <p><strong>General self care:</strong> {item.self_care.join(" · ")}</p>}
+                            </details>
                           )}
-                          {item.matched.length > 0 && (
-                            <p>
-                              <strong>Features matched:</strong>{" "}
-                              {item.matched.join(" · ")}
-                            </p>
-                          )}
-                          {item.usually_also.length > 0 && (
-                            <p>
-                              <strong>Often also seen:</strong>{" "}
-                              {item.usually_also.join(" · ")}
-                            </p>
-                          )}
-                          {item.self_care.length > 0 && (
-                            <p>
-                              <strong>General self care:</strong>{" "}
-                              {item.self_care.join(" · ")}
-                            </p>
-                          )}
-                          <p>
-                            <strong>See a doctor if:</strong>{" "}
-                            {item.see_doctor_if}
-                          </p>
                         </article>
                       ))}
                     </div>
