@@ -93,11 +93,17 @@ Per clinical safety requirements:
 
 ## 4. Current Frontend Scaffolding (`frontend/`)
 
-A starter implementation matching `frontend_spec.md` is already built in `frontend/`:
+The polished frontend implementation is built in `frontend/`:
 - **Tech Stack**: React 18, TypeScript, Tailwind CSS, Vite.
+- **Hero & Visuals**:
+  - React Bits **`GradientASCII`** background with interactive cursor-scrambling WebGL glyphs and custom skin-tone lighting palette.
+  - Floating Liquid Glass hero cards and capability pills.
+- **Usage Section**: 3-step interactive clinical journey cards ("Capture & Report", "Multimodal Neural Analysis", "Evidence & Local Care").
+- **Liquid Glass Design System**: [`frontend/src/glass.css`](file:///home/meow/Documents/DermaCheck/frontend/src/glass.css) with multi-layer specular highlights, saturated backdrop blurs, and glass morphism surfaces.
 - **Smooth Scroll**: `lenis` configured in `frontend/src/components/SmoothScroll.tsx` (synced with GSAP ticker loop).
-- **Animations**: `gsap` + `ScrollTrigger` in `frontend/src/components/TriageDashboard.tsx`.
+- **Animations**: `gsap` + `ScrollTrigger` for smooth stagger entrance on results reveal.
 - **API Proxy**: `frontend/vite.config.ts` proxies `/api` and `/health` to `http://localhost:8000` during local dev.
+- **Backend CORS**: Wide-open CORS (`*`) is enabled in `backend/main.py`, allowing both same-origin Vercel requests and cross-origin calls (e.g. localhost, ngrok, Cloudflare Tunnel).
 
 ### Running the Frontend Locally:
 ```bash
