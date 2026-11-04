@@ -292,7 +292,7 @@ export default function TriageDashboard() {
         </nav>
         <span className="topbar-badge">
           <Sparkles size={13} className="text-sky-600" />
-          Gemini 2.5 Active
+          AI-assisted screening
         </span>
       </header>
 
@@ -324,7 +324,7 @@ export default function TriageDashboard() {
               Clear skin guidance, backed by clinical evidence.
             </h1>
             <p className="hero-description">
-              Upload a clear photo or report symptoms to receive rapid multimodal intake insights, differential diagnostic indicators, and verified local dermatologist referrals in seconds.
+              Upload a clear photo or report symptoms to receive screening insights, possible explanations, and local dermatology options to discuss with a clinician.
             </p>
             <div className="hero-actions">
               <button
@@ -347,8 +347,8 @@ export default function TriageDashboard() {
                 <Activity size={18} />
               </div>
               <div className="stat-text">
-                <strong>&lt; 30s Rapid Intake</strong>
-                <small>Multimodal neural triage</small>
+                <strong>Guided Intake</strong>
+                <small>Photo and symptom context</small>
               </div>
             </div>
             <div className="stat-item">
@@ -365,8 +365,8 @@ export default function TriageDashboard() {
                 <MapPin size={18} />
               </div>
               <div className="stat-text">
-                <strong>Live Doctor Grounding</strong>
-                <small>Real-time Google search referrals</small>
+                <strong>Local Care Options</strong>
+                <small>Search-backed suggestions</small>
               </div>
             </div>
           </div>
@@ -402,7 +402,7 @@ export default function TriageDashboard() {
             </div>
             <h3>Multimodal Neural Analysis</h3>
             <p>
-              Gemini 2.5 Flash analyzes morphology, color borders, and chronicity, screening for acute red flags (anaphylaxis) and ABCDE melanoma traits.
+              The screening service reviews reported symptoms and visible features, then flags patterns that may need prompt medical attention.
             </p>
           </div>
 
@@ -413,7 +413,7 @@ export default function TriageDashboard() {
             </div>
             <h3>Evidence & Local Care</h3>
             <p>
-              Receive differential matches with clinical reasoning, conservative self-care steps, and verified dermatologists in your metro for prompt in-person care.
+              Receive possible matches with supporting context, conservative self-care information, and nearby dermatology options for follow-up.
             </p>
           </div>
         </div>
@@ -796,7 +796,7 @@ export default function TriageDashboard() {
 
                 {/* Doctor Grounding Referrals */}
                 <div className="result-block result-animate">
-                  <h3>Verified Dermatologists & Clinics in {submittedCity}</h3>
+                  <h3>Dermatology Options in {submittedCity}</h3>
                   {results.recommended_doctors.length ? (
                     <div className="doctor-list">
                       {results.recommended_doctors.map((item, index) => {
@@ -857,7 +857,7 @@ export default function TriageDashboard() {
             <section id="safety" className="mt-14 pt-8 border-t border-slate-200 text-xs text-slate-500 leading-relaxed">
               <h3 className="font-bold text-slate-700 text-sm mb-2">Clinical Protocol & Patient Privacy</h3>
               <p>
-                DermaCheck is an automated AI algorithmic pre-screening prototype developed for educational triage demonstration. Uploaded photos are processed ephemerally for screening inference and are not retained in long-term data storage. This application does not constitute a certified medical device and should never replace in-person consultation, clinical dermatoscope evaluation, or emergency medical treatment.
+                DermaCheck is an automated AI pre-screening prototype developed for educational demonstration. Uploaded photos are sent to the screening service for analysis; avoid including identifying details. This application does not constitute a certified medical device and should never replace in-person consultation, clinical dermatoscope evaluation, or emergency medical treatment.
               </p>
             </section>
           </div>

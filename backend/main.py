@@ -146,7 +146,7 @@ SYSTEM_INSTRUCTION = (
 app = FastAPI(
     title="DermaCheck PoC Backend",
     version="1.0.0",
-    description="Multimodal skin screening and doctor referral demo backend powered by Gemini 2.5 Flash",
+    description="AI-assisted multimodal skin screening and local care discovery demo backend",
 )
 
 # Enable wide-open CORS so tunnel, ngrok, preview, and external callers can interact without preflight issues

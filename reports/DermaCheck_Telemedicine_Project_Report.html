@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DermaCheck | Telemedicine Project Report</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; }
+    :root { --ink:#1b2935; --muted:#536575; --soft:#f3f6f5; --line:#dbe3e4; --teal:#1d6d72; --peach:#d49b83; --pale:#e9f2f0; }
+    html, body { margin:0; padding:0; color:var(--ink); background:#e7ecec; font-family:Arial, Helvetica, sans-serif; }
+    .sheet { position:relative; width:210mm; height:297mm; margin:12mm auto; padding:18mm 17mm 18mm; overflow:hidden; background:#fff; box-shadow:0 7px 35px #1c31301d; break-after:page; }
+    .sheet:last-child { break-after:auto; }
+    .topline { display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); padding-bottom:7px; color:var(--teal); font-size:8.5pt; font-weight:700; letter-spacing:.13em; text-transform:uppercase; }
+    .folio { position:absolute; bottom:11mm; left:17mm; right:17mm; display:flex; justify-content:space-between; border-top:1px solid var(--line); padding-top:6px; color:#75848f; font-size:8pt; }
+    h1,h2,h3,h4,p,ul,ol { margin-top:0; }
+    h1 { font-family:Georgia, 'Times New Roman', serif; font-size:40pt; line-height:1.03; letter-spacing:-.035em; margin:0 0 6mm; }
+    h2 { font-family:Georgia, 'Times New Roman', serif; font-size:22pt; line-height:1.1; letter-spacing:-.02em; margin:7mm 0 4mm; }
+    h3 { font-size:11.2pt; line-height:1.2; color:var(--teal); margin:5mm 0 2mm; }
+    h4 { font-size:9.5pt; margin:0 0 1.5mm; }
+    p,li,td,th { font-size:9.25pt; line-height:1.43; }
+    p { margin-bottom:3mm; }
+    li { margin-bottom:1.5mm; }
+    ul,ol { padding-left:5mm; margin-bottom:3mm; }
+    strong { color:#213946; }
+    a { color:var(--teal); text-decoration:none; }
+    .muted { color:var(--muted); }
+    .eyebrow { color:var(--teal); font-size:9pt; font-weight:700; letter-spacing:.17em; text-transform:uppercase; }
+    .deck { font-family:Georgia, 'Times New Roman', serif; color:#49636b; font-size:15pt; line-height:1.32; }
+    .rule { height:1px; background:var(--line); margin:5mm 0; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:4mm; }
+    .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:3mm; }
+    .panel { padding:4mm; background:var(--soft); border:1px solid var(--line); border-radius:3mm; }
+    .panel.peach { background:#fcf4ef; border-color:#ead8cf; }
+    .panel.teal { background:var(--pale); border-color:#ccdddb; }
+    .panel p:last-child, .panel ul:last-child { margin-bottom:0; }
+    .panel h3 { margin-top:0; }
+    .small { font-size:8.15pt; line-height:1.38; }
+    .tiny { font-size:7.7pt; line-height:1.32; }
+    .caption { font-size:8pt; color:var(--muted); margin:1.5mm 0 0; }
+    .label { display:block; margin-bottom:1mm; color:var(--teal); font-size:8pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+    table { width:100%; border-collapse:collapse; margin:2mm 0 4mm; }
+    th { background:var(--pale); color:#24575c; font-weight:700; text-align:left; }
+    th,td { border:1px solid var(--line); padding:2mm 2.5mm; vertical-align:top; }
+    .table-small th,.table-small td { font-size:8pt; line-height:1.32; }
+    .flow { display:flex; align-items:center; gap:1.5mm; margin:3mm 0 4mm; }
+    .flow span { flex:1; min-height:16mm; padding:2.5mm 2mm; border:1px solid #ccdddb; border-radius:2mm; background:var(--pale); color:#25555a; font-size:8pt; font-weight:700; text-align:center; display:flex; align-items:center; justify-content:center; }
+    .flow b { color:var(--peach); font-size:14pt; }
+    .note { border-left:3px solid var(--peach); padding:2mm 3mm; background:#fcf7f4; }
+    .two-col { columns:2; column-gap:7mm; }
+    .two-col p { break-inside:avoid; }
+    .cover { padding-top:20mm; background:linear-gradient(138deg,#fff 0%,#fff 68%,#edf3f1 100%); }
+    .cover .brand { display:flex; align-items:center; gap:3mm; color:var(--teal); font-size:11pt; font-weight:700; letter-spacing:.05em; }
+    .cover .brandmark { width:9mm; height:9mm; border-radius:2.5mm; display:grid; place-items:center; background:#1c5860; color:white; font-family:Georgia,serif; font-size:17pt; }
+    .cover .line { width:24mm; height:1.6mm; margin:22mm 0 8mm; background:var(--peach); }
+    .cover .subtitle { max-width:148mm; font-size:14pt; color:#536975; line-height:1.36; }
+    .cover .meta { margin-top:19mm; display:grid; grid-template-columns:1fr 1fr; gap:7mm; }
+    .cover .meta div { border-top:1px solid #cbd7d6; padding-top:3mm; }
+    .cover .meta strong { font-size:11pt; }
+    .cover .abstract { margin-top:18mm; padding:6mm; background:#fff; border:1px solid #d8e4e0; border-radius:3mm; max-width:165mm; }
+    .cover .abstract p { font-size:9.4pt; }
+    .cover .abstract p:last-child { margin-bottom:0; }
+    .screenshot { width:82%; margin:0 auto; border:1px solid var(--line); border-radius:2mm; display:block; }
+    .chiprow { display:flex; gap:2mm; flex-wrap:wrap; margin:3mm 0; }
+    .chip { padding:1.2mm 2.2mm; border-radius:100px; background:var(--soft); border:1px solid var(--line); color:#425967; font-size:7.5pt; }
+    .refs { padding-left:5mm; }
+    .refs li { font-size:8pt; line-height:1.38; margin-bottom:2.5mm; overflow-wrap:anywhere; }
+    @media print { html,body{background:#fff} .sheet{margin:0; box-shadow:none} }
+  </style>
+</head>
+<body>
+  <section class="sheet cover">
+    <div class="brand"><span class="brandmark">D</span> DERMACHECK</div>
+    <div class="line"></div>
+    <div class="eyebrow">Telemedicine project report</div>
+    <h1>DermaCheck</h1>
+    <p class="subtitle">An AI-assisted dermatology screening and local care discovery prototype: design, implementation, business model and operating plan.</p>
+    <div class="meta">
+      <div><span class="label">Prepared by</span><strong>Rhea Ferrao</strong><br><span class="muted">Biomedical Engineering</span></div>
+      <div><span class="label">Institution</span><strong>MIT Manipal</strong><br><span class="muted">Telemedicine project</span></div>
+      <div><span class="label">Submission date</span><strong>4 November 2026</strong></div>
+      <div><span class="label">Project type</span><strong>Educational proof of concept</strong></div>
+    </div>
+    <div class="abstract">
+      <span class="label">Abstract</span>
+      <p>DermaCheck collects a person's skin concern, optional photograph, affected body area, duration and city through a web interface. A FastAPI service requests a structured AI screening response, highlights selected red flags and proposes nearby dermatology options. The product is positioned as a pre-consultation aid: it helps organize information and prompt appropriate follow-up, while diagnosis and treatment remain the responsibility of a registered medical practitioner.</p>
+      <p>This report explains the implemented system, maps it to asynchronous teledermatology and referral concepts, and develops a realistic business and operations plan. It distinguishes present functionality from safeguards and partnerships that would be required before a clinical service could be launched.</p>
+    </div>
+    <div class="folio"><span>Educational prototype · not a clinical validation study</span><span>01 / 08</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="topline"><span>01 · Context and objective</span><span>DermaCheck</span></div>
+    <h2>Why this problem?</h2>
+    <p>Skin concerns are frequently first noticed outside a clinic. A patient may have a photograph and a description but be unsure which details matter, how urgently to seek care, or where to find a dermatologist. Teledermatology is well suited to image-and-history exchange, but image quality, incomplete history and the absence of a physical examination impose real limits. The project therefore focuses on <strong>structured intake and referral support</strong>, not remote diagnosis.</p>
+    <div class="grid2">
+      <div class="panel teal"><h3>Project objective</h3><p>Build a responsive web prototype that converts unstructured patient observations into a readable screening summary and a list of local care options, while making escalation and clinical limitations visible.</p></div>
+      <div class="panel peach"><h3>Boundary of the prototype</h3><p>No doctor participates in the current workflow. There is no medical record, appointment booking, prescription, clinician verification workflow or validated diagnostic performance claim. The output is educational pre-screening only.</p></div>
+    </div>
+    <h3>Intended user journey</h3>
+    <div class="flow"><span>Describe concern<br>and duration</span><b>›</b><span>Optionally add<br>skin photo</span><b>›</b><span>Review AI-assisted<br>screening</span><b>›</b><span>Contact an<br>appropriate clinician</span></div>
+    <p>The person chooses an affected area, symptoms, duration and city; a photo is optional. The service returns a lead summary, possible conditions with evidence and conservative information, warning notices where generated, and dermatologist or clinic suggestions. The interface keeps a prominent “not a diagnosis” message and directs emergency symptoms to immediate in-person care.</p>
+    <h3>What is implemented today?</h3>
+    <table class="table-small">
+      <tr><th>Implemented in repository</th><th>Not yet implemented</th></tr>
+      <tr><td>React/TypeScript intake UI; optional photo; FastAPI endpoint; schema-validated screening response; Google-search-grounded care suggestions with a Mumbai fallback; basic file/input limits; Vercel build and API routing.</td><td>RMP-led teleconsultation; patient consent workflow; verified provider directory; appointment or referral completion; medical record integration; outcome measurement; formal model evaluation; production-grade abuse controls and governance.</td></tr>
+    </table>
+    <h3>Development sequence evidenced by the project</h3>
+    <p class="small"><strong>1. Define the contract:</strong> the backend specification and handoff documents set the multipart inputs, structured response fields and mandatory safety messages. <strong>2. Build and integrate:</strong> FastAPI/Pydantic orchestrates screening and search; React provides the intake and results views. <strong>3. Iterate and deploy:</strong> the interface was refined for desktop and mobile, and Vercel configuration connects the static site with the Python API. This sequence explains the current artifact; it is not a formal clinical development lifecycle.</p>
+    <p class="note small"><strong>Telemedicine distinction.</strong> Under Indian guidance, a teleconsultation is a professional interaction involving a registered medical practitioner (RMP), patient identification, consent and clinical judgment [3]. DermaCheck is a preparatory digital-health tool, not itself an RMP consultation.</p>
+    <div class="folio"><span>Rhea Ferrao · MIT Manipal Biomedical Engineering</span><span>02 / 08</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="topline"><span>02 · How the system was built</span><span>Architecture</span></div>
+    <h2>Implementation</h2>
+    <p>The application uses a single-page React 18 and TypeScript frontend (Vite) with a FastAPI Python backend. The browser sends a multipart form to <strong>POST /api/v1/triage-poc</strong>. The backend validates text fields and image type/size, then sends the supplied history and optional photo to an external multimodal model API. It requests a structured response through a Pydantic schema and performs a second, search-grounded request for local dermatologist options.</p>
+    <div class="flow"><span>React intake<br>and results</span><b>›</b><span>FastAPI validation<br>and orchestration</span><b>›</b><span>External multimodal<br>AI API</span><b>›</b><span>Grounded local<br>care search</span></div>
+    <table class="table-small">
+      <tr><th>Layer</th><th>Current implementation</th><th>Purpose</th></tr>
+      <tr><td>Interface</td><td>React, TypeScript, CSS, Vite</td><td>Collect inputs; display warnings, rationale and care options.</td></tr>
+      <tr><td>Application API</td><td>FastAPI, Pydantic, Pillow</td><td>Validate inputs, read images, enforce response contract.</td></tr>
+      <tr><td>AI services</td><td>Google GenAI SDK; Gemini 2.5 Flash; Google Search grounding</td><td>Generate screening text and location-based suggestions.</td></tr>
+      <tr><td>Deployment</td><td>Vercel configuration with static frontend and Python function</td><td>Serve web app and API from one deployment target.</td></tr>
+    </table>
+    <p class="small"><strong>Data contract.</strong> Each screening response can contain an alert level, a pigmented-lesion warning flag, a summary, clinical analysis, one to four possible conditions with fit/evidence/self-care/escalation text, and suggested doctors. Pydantic checks the response shape; it does <em>not</em> validate medical truth or the quality of a referral.</p>
+    <img class="screenshot" src="assets/dermacheck-intake.png" alt="DermaCheck intake interface screenshot">
+    <p class="caption">Figure 1. Current intake interface: structured symptoms, context and optional photo upload (captured from local build, 4 Nov 2026).</p>
+    <p class="note small"><strong>Model provenance.</strong> The repository currently calls a third-party foundation-model API. The application has not trained, hosted or clinically validated an in-house model. Public UI copy uses the neutral term “AI-assisted screening”; technical and academic documentation should disclose the actual integration.</p>
+    <div class="folio"><span>Source reviewed: current project repository</span><span>03 / 08</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="topline"><span>03 · Telemedicine concepts</span><span>Course linkage</span></div>
+    <h2>Where DermaCheck fits</h2>
+    <p>The closest telemedicine pattern is <strong>asynchronous “store-and-forward” teledermatology</strong>: a person assembles an image and clinical history for later review [4]. The American Academy of Dermatology describes store-and-forward exchange of photographs and other images between a referring clinician and dermatologist [5]. DermaCheck performs the preparation and AI screening steps; clinician review is a proposed next stage, not an existing feature. A future clinic-led version could connect this intake “spoke” to a dermatologist “hub.”</p>
+    <table class="table-small">
+      <tr><th>Telemedicine concept</th><th>Connection to this project</th><th>Gap before real service</th></tr>
+      <tr><td>Asynchronous intake</td><td>Photo plus symptoms, anatomical site and duration can be captured without a live call.</td><td>Secure handoff and follow-up with an identified clinician.</td></tr>
+      <tr><td>Clinical decision support</td><td>Possible conditions and rationale help organize questions for an RMP.</td><td>Validation, audit, human review and calibrated uncertainty.</td></tr>
+      <tr><td>Triage and escalation</td><td>Prompted red flags and ABCDE pigmented-lesion warning aim to identify care urgency.</td><td>Safety testing; fail-safe handling of false negatives; emergency pathways.</td></tr>
+      <tr><td>Referral and continuity</td><td>City-based suggestions can reduce search effort after screening.</td><td>Verify practitioner credentials, availability, contact data and referral completion.</td></tr>
+      <tr><td>Equity and access</td><td>Web access can reduce the first information barrier.</td><td>Language, accessibility, low-bandwidth and non-digital alternatives.</td></tr>
+    </table>
+    <h3>Clinical and ethical design principles</h3>
+    <div class="grid2">
+      <div class="panel"><h4>Human clinical authority</h4><p class="small">Indian guidance places consultation decisions with the RMP and requires attention to identity, consent, modality, evaluation and management [3]. The product should route people to qualified care, not replace professional judgment.</p></div>
+      <div class="panel"><h4>Image quality and uncertainty</h4><p class="small">Dermatology depends on adequate images and context. Missing photos, poor lighting, diverse skin tones and inaccessible body sites can alter visible features. The UI should say when evidence is insufficient [5].</p></div>
+      <div class="panel"><h4>Safety and emergency care</h4><p class="small">The ABCDE signs are warning signs for evaluation, not an automated melanoma diagnosis [6]. A person with airway symptoms or rapidly severe signs should seek emergency care rather than rely on a web result.</p></div>
+      <div class="panel"><h4>Responsible AI</h4><p class="small">WHO guidance calls for human autonomy, safety, transparency and accountability in health AI [2]. That implies documented limitations, review of errors, privacy controls and a route to report harm.</p></div>
+    </div>
+    <p class="note small">WHO recommends telemedicine only where it complements face-to-face services and where safety, privacy, traceability, accountability and security can be monitored [1]. This informs the operating plan on page 6.</p>
+    <div class="folio"><span>Conceptual mapping; not a claim of clinical efficacy</span><span>04 / 08</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="topline"><span>04 · Business perspective</span><span>Service model</span></div>
+    <h2>Business case</h2>
+    <p><strong>Customer problem.</strong> People with a skin concern need a clear route from first observation to the right level of care. Clinics need useful pre-visit context without inheriting misleading AI conclusions. The proposed value is a better intake and referral handoff, rather than a claim to automate diagnosis.</p>
+    <div class="grid3">
+      <div class="panel teal"><h4>Patients</h4><p class="small">Organized symptoms, warning guidance and a shorter search for a dermatologist.</p></div>
+      <div class="panel teal"><h4>Clinicians</h4><p class="small">A structured pre-visit summary that can be checked against the original image and history.</p></div>
+      <div class="panel teal"><h4>Care networks</h4><p class="small">Potentially improved navigation, access and referral completion if integrated into care pathways.</p></div>
+    </div>
+    <h3>Proposed business model</h3>
+    <table class="table-small">
+      <tr><th>Element</th><th>Practical proposal</th></tr>
+      <tr><td>Primary segment</td><td>Dermatology clinics, hospitals or university clinics running supervised digital intake.</td></tr>
+      <tr><td>Offering</td><td>White-label pre-consultation capture, safety prompts, clinician review queue and referral tracking after validation.</td></tr>
+      <tr><td>Revenue route</td><td>Institutional subscription or per-completed-intake fee. Keep patient triage access free in the pilot.</td></tr>
+      <tr><td>Key partners</td><td>Registered dermatologists, hospital IT/security teams, accessibility and language reviewers.</td></tr>
+      <tr><td>Cost drivers</td><td>AI and search API usage, serverless execution, provider verification, clinical review, support and security.</td></tr>
+      <tr><td>Trust constraint</td><td>Do not sell ranking in the care list or imply a listing is “verified” without a documented check.</td></tr>
+    </table>
+    <h3>Unit-economics framework</h3>
+    <p class="small">The current repository has no measured traffic, conversion or cost data, so a numeric forecast would be speculative. A pilot should calculate <strong>cost per completed assessment</strong> = (model calls + search calls + hosting + support + verification) ÷ completed assessments. For institutional pricing, contribution margin is revenue per completed assessment minus that cost. Sensitivity analysis should include image-heavy cases, repeat submissions, quota exhaustion and clinician review time.</p>
+    <div class="grid2">
+      <div class="panel peach"><h4>Pilot adoption hypothesis</h4><p class="small">A clinic will adopt the intake if it saves staff time without increasing unsafe referrals or clinician correction burden. Measure it rather than assume it.</p></div>
+      <div class="panel peach"><h4>Commercial gate</h4><p class="small">Any external launch requires clinician governance, transparent claims, data handling review, provider verification and evidence from prospective testing.</p></div>
+    </div>
+    <div class="folio"><span>All commercial elements above are proposed, not deployed</span><span>05 / 08</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="topline"><span>05 · Operations perspective</span><span>Service blueprint</span></div>
+    <h2>How it would run</h2>
+    <table class="table-small">
+      <tr><th>Stage</th><th>User / clinic action</th><th>Operator responsibility</th></tr>
+      <tr><td>1. Intake</td><td>User supplies photo and symptoms, sees scope/consent information.</td><td>Accessible form, file checks, consent record if care is offered.</td></tr>
+      <tr><td>2. Screening</td><td>User receives provisional summary and explicit escalation advice.</td><td>Monitor latency, failures, quota and red-flag outputs; prevent unsafe certainty.</td></tr>
+      <tr><td>3. Referral</td><td>User chooses a clinic or RMP contact.</td><td>Verify credentials, listing freshness and conflicts of interest.</td></tr>
+      <tr><td>4. Consultation</td><td>RMP reviews original inputs and decides next step.</td><td>Secure handoff, provenance, recordkeeping and feedback loop.</td></tr>
+      <tr><td>5. Follow-up</td><td>Patient reports whether care was reached.</td><td>Track completion, complaints, incidents and quality improvement.</td></tr>
+    </table>
+    <h3>Proposed operating controls</h3>
+    <div class="grid2">
+      <div class="panel"><h4>Clinical governance</h4><p class="small">Name a medical lead; review prompts, escalation rules and a sample of outputs; publish indications and exclusions; define a rapid path for safety incidents and clinician overrides.</p></div>
+      <div class="panel"><h4>Provider-directory quality</h4><p class="small">Confirm RMP registration, clinic contact details and availability before marking any listing verified. Refresh on a schedule; remove stale entries and record corrections.</p></div>
+      <div class="panel"><h4>Privacy and security</h4><p class="small">Explain that uploaded photos go to an external AI service. Minimize data, secure transmission, define retention/deletion with vendors, restrict access and document breach response.</p></div>
+      <div class="panel"><h4>Abuse and continuity</h4><p class="small">Add server-side rate limits, upload scanning/validation, monitoring and an outage message. On model quota or search failure, avoid fabricating results; offer a safe manual care path.</p></div>
+    </div>
+    <h3>Operational dashboard for a pilot</h3>
+    <table class="table-small">
+      <tr><th>Metric</th><th>Definition</th><th>Why it matters</th></tr>
+      <tr><td>Assessment completion</td><td>Valid completed requests ÷ started intakes</td><td>Usability and access.</td></tr>
+      <tr><td>Service reliability</td><td>Successful responses; p95 response time; quota errors</td><td>Continuity and cost.</td></tr>
+      <tr><td>Safety signal</td><td>Clinician-reviewed false negatives/positives for urgent cases</td><td>Clinical risk; needs adjudicated cases.</td></tr>
+      <tr><td>Referral completion</td><td>Confirmed clinician contact ÷ suggested referrals</td><td>Whether navigation leads to care.</td></tr>
+    </table>
+    <div class="folio"><span>Current product lacks the proposed clinical operations layer</span><span>06 / 08</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="topline"><span>06 · Evaluation and limitations</span><span>Next steps</span></div>
+    <h2>Evidence before scale</h2>
+    <p>The present application demonstrates a working flow, not diagnostic accuracy. Structured output and a polished interface can make an answer appear authoritative even when it is wrong. Evaluation must therefore test clinical safety, usability, equity and service operations separately.</p>
+    <h3>Suggested validation design</h3>
+    <ol>
+      <li><strong>Technical verification:</strong> test upload types/sizes, malformed input, timeouts, quota failures, response schema, mobile readability and referral link behavior.</li>
+      <li><strong>Clinical review set:</strong> create de-identified, consented cases across common conditions, emergencies, pigmented lesions and a range of skin tones; obtain dermatologist reference decisions.</li>
+      <li><strong>Safety analysis:</strong> measure urgent-case sensitivity, missed-dangerous-case rate, over-referral, uncertainty handling and condition agreement; investigate every serious miss.</li>
+      <li><strong>Usability study:</strong> observe patients and clinicians completing tasks; assess comprehension of “screening versus diagnosis,” photo guidance, escalation and referral.</li>
+      <li><strong>Prospective supervised pilot:</strong> place a clinician between AI output and patient-facing clinical decisions, then measure referral completion and staff workload.</li>
+    </ol>
+    <h3>Limitations visible in the current code</h3>
+    <div class="grid2">
+      <div class="panel peach"><h4>Clinical</h4><p class="small">No physical examination or dermoscopy; no calibration or external validation; prompt-generated red flags may miss cases; “fit” labels are qualitative, not probabilities.</p></div>
+      <div class="panel peach"><h4>Referral</h4><p class="small">Search-grounded listings can be stale or incorrect; the fallback list is Mumbai-specific; there is no credential check or appointment confirmation.</p></div>
+      <div class="panel peach"><h4>Privacy</h4><p class="small">The backend has no persistent patient database, but input is sent to a third-party AI provider. Retention and processing terms require review before clinical use.</p></div>
+      <div class="panel peach"><h4>Security / resilience</h4><p class="small">CORS is broad; API access is unauthenticated; no repository-level rate limiter is present; the service depends on external quota and availability.</p></div>
+    </div>
+    <h3>Phased roadmap</h3>
+    <div class="flow"><span>1 · Stabilize<br>inputs and errors</span><b>›</b><span>2 · Verify<br>clinical content</span><b>›</b><span>3 · Add RMP<br>review and consent</span><b>›</b><span>4 · Pilot and<br>measure outcomes</span></div>
+    <p class="note small"><strong>Conclusion.</strong> DermaCheck is a useful engineering demonstration of asynchronous intake, AI-assisted information organization and care navigation. Its strongest real-world path is a supervised clinic workflow where the system prepares information and a registered practitioner makes clinical decisions. Its next milestone is evidence and governance, not a broader diagnostic claim.</p>
+    <div class="folio"><span>Recommendation: supervised pilot only after safeguards</span><span>07 / 08</span></div>
+  </section>
+
+  <section class="sheet">
+    <div class="topline"><span>07 · Sources and project evidence</span><span>References</span></div>
+    <h2>References</h2>
+    <ol class="refs">
+      <li>World Health Organization. <em>Recommendations on digital interventions for health system strengthening.</em> 2019. <a href="https://www.who.int/publications/i/item/9789241550505">who.int/publications/i/item/9789241550505</a></li>
+      <li>World Health Organization. <em>Ethics and governance of artificial intelligence for health.</em> 2021. <a href="https://www.who.int/publications/i/item/9789240029200">who.int/publications/i/item/9789240029200</a></li>
+      <li>Ministry of Health and Family Welfare, Government of India. <em>Telemedicine Practice Guidelines.</em> 2020. <a href="https://www.mohfw.gov.in/pdf/Telemedicine.pdf">mohfw.gov.in/pdf/Telemedicine.pdf</a></li>
+      <li>World Health Organization. <em>Classification of digital health interventions v1.0.</em> 2018. <a href="https://www.who.int/publications-detail-redirect/WHO-RHR-18.06">who.int/publications-detail-redirect/WHO-RHR-18.06</a></li>
+      <li>American Academy of Dermatology. <em>AAD's Teledermatology Program</em> and <em>Teledermatology Standards.</em> <a href="https://www.aad.org/member/career/volunteer/teledermatology">aad.org/member/career/volunteer/teledermatology</a>; <a href="https://www.aad.org/member/practice/telederm/standards">aad.org/member/practice/telederm/standards</a></li>
+      <li>American Academy of Dermatology. <em>What to look for: ABCDEs of melanoma.</em> <a href="https://www.aad.org/public/diseases/skin-cancer/abcdes-melanoma">aad.org/public/diseases/skin-cancer/abcdes-melanoma</a></li>
+    </ol>
+    <h3>Repository evidence reviewed</h3>
+    <table class="table-small">
+      <tr><th>Artifact</th><th>Evidence used in this report</th></tr>
+      <tr><td><code>frontend/src/components/TriageDashboard.tsx</code></td><td>Input fields, result display, safety copy, API request and responsive intake flow.</td></tr>
+      <tr><td><code>backend/main.py</code></td><td>FastAPI endpoint, Pydantic models, external AI calls, image validation and Mumbai fallback.</td></tr>
+      <tr><td><code>vercel.json</code></td><td>Static frontend build, Python API routing and response headers.</td></tr>
+      <tr><td><code>frontend/package.json</code></td><td>React, Vite, TypeScript and interface dependencies.</td></tr>
+    </table>
+    <h3>Interpretation note</h3>
+    <p class="small">External references provide frameworks, not evidence that DermaCheck itself is clinically effective. Statements about current functionality come from source-code inspection on 4 November 2026. The business model, operating controls, metrics and roadmap are proposals for a future supervised service. No patient data or clinical performance results were available for this report.</p>
+    <div class="rule"></div>
+    <p class="small muted">Prepared for a Telemedicine course project in Biomedical Engineering at MIT Manipal. This document may be edited for a department-specific template, course code, supervisor, declaration and bibliography style before submission.</p>
+    <div class="folio"><span>DermaCheck · Project report</span><span>08 / 08</span></div>
+  </section>
+</body>
+</html>
